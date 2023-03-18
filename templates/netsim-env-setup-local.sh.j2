@@ -12,9 +12,9 @@ loopback_var=0
 
 {% for netsim in nso_netsim %}
 # {{ netsim.type }}
-readonly {{ netsim.type }}_count={{ netsim.type_count }}
-readonly {{ netsim.type }}_count_gige={{ netsim.type_count_gige | default(0) }}
-readonly {{ netsim.type }}_count_tengige={{ netsim.type_count_tengige | default(0) }}
+readonly {{ netsim.type }}_count={{ netsim.count }}
+readonly {{ netsim.type }}_count_gige={{ netsim.count_gige_intf | default(0) }}
+readonly {{ netsim.type }}_count_tengige={{ netsim.count_tengige_intf | default(0) }}
 {% if not loop.last %}
 
 {% endif %}

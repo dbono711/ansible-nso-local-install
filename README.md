@@ -24,7 +24,7 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 * NSO
   * Python 3
   * Operating System requirements as described on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/requirements) (Java + Ant)
-    * **NOTE:** If ```Java``` or ```Ant``` binaries are installed in a location other than the default, you can change the respective ```java_binary``` or ```ant_binary``` variables in [vars](vars)
+    * **NOTE:** If ```Java``` or ```Ant``` binaries are installed in a location other than the default per the Operating System requirements on DevNet, you can change the respective ```java_binary``` or ```ant_binary``` variables in the appropriate Operating System [vars](vars) file
     * **NOTE:** Assumes the target host has ```build-essentials``` (gcc, make, etc.) and ```xsltproc``` installed
   * NSO Signed Binary (*.signed.bin)
     * The NSO signed binary **must** be placed within the (```files```) folder
@@ -34,6 +34,8 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 ### Validated NSO Versions
 
 * 5.5
+* 5.7.1
+* 6.0
 
 ## Role Variables
 
@@ -100,7 +102,6 @@ These variables are directly related to configuration than can be applied to the
       enabled: true
       directory: ./logs
       history_size: 500
-      rollback_numbering: rolling
     nso_config_cli:
       rollback_numbering: rolling
     nso_config_webui_ssl:
@@ -122,7 +123,7 @@ These variables are directly related to configuration than can be applied to the
 
 ## Local Testing
 
-Testing is accomplished with Molecule. After [installing](https://molecule.readthedocs.io/en/latest/installation.html) Molecule in your local environment, you can execute the complete test suite via:
+Testing is accomplished with Molecule. After [installing](https://molecule.readthedocs.io/en/latest/installation/) Molecule in your local environment, you can execute the complete test suite via:
 
 ```molecule test```
 
