@@ -30,13 +30,6 @@
 
   <state-dir>./state</state-dir>
 
-{% for group in nso_config_hide_group %}
-  <!-- Unhide {{ group.name }} -->
-  <hide-group>
-    <name>{{ group.name }}</name>
-  </hide-group>
-{% endfor %}
-
   <notifications>
     <event-streams>
 
@@ -74,9 +67,8 @@
       </stream>
 
       <!-- This is the builtin stream used by NCS to generate northbound -->
-      <!-- notifications for kicker event stream. -->
+      <!-- notifications for kicker events. -->
       <!-- See tailf-kicker.yang -->
-      <!-- Required for cluster mode. -->
       <stream>
         <name>kicker-events</name>
         <description>NCS event according to tailf-kicker.yang</description>
@@ -105,15 +97,16 @@
       </stream>
 
       <!-- This is the builtin stream used by NCS to generate northbound -->
-      <!-- notifications for plan state transitions. -->
-      <!-- See tailf-ncs-plan.yang -->
+      <!-- notifications for service state changes. -->
+      <!-- See tailf-ncs-plan.yang and tailf-ncs-services.yang -->
       <stream>
         <name>service-state-changes</name>
-        <description>Plan state transitions according to
-        tailf-ncs-plan.yang</description>
-        <replay-support>false</replay-support>
+        <description>Service state changes according to
+        tailf-ncs-plan.yang and tailf-ncs-services.yang
+        </description>
+        <replay-support>true</replay-support>
         <builtin-replay-store>
-          <enabled>false</enabled>
+          <enabled>true</enabled>
           <dir>./state</dir>
           <max-size>S10M</max-size>
           <max-files>50</max-files>
@@ -130,7 +123,6 @@
       <dir>${NCS_DIR}/var/ncs/cdb</dir>
     </init-path>
   </cdb>
-
 
   <!--
       These keys are used to encrypt values of the types
@@ -157,10 +149,7 @@
     </AES256CFB128>
   </encrypted-strings>
 
-
   <logs>
-    <trace-id>false</trace-id>
-
     <audit-network-log>
       <enabled>false</enabled>
       <file>
@@ -271,7 +260,6 @@
     <algorithm>sha-512</algorithm>
   </crypt-hash>
 
-
 {% if nso_config_rollback is defined %}
   <!-- Disable this for performance critical applications, enabling -->
   <!-- rollbacks means additional disk IO for each transaction -->
@@ -279,7 +267,6 @@
     <enabled>{{ nso_config_rollback.enabled | default('true') | bool | lower }}</enabled>
     <directory>{{ nso_config_rollback.directory | default('./logs') }}</directory>
     <history-size>{{ nso_config_rollback.history_size | default('500') }}</history-size>
-    <rollback-numbering>{{ nso_config_rollback.rollback_numbering | default('fixed') }}</rollback-numbering>
   </rollback>
 {% endif %}
 
@@ -322,8 +309,8 @@
         <enabled>{{ nso_config_webui_ssl.enabled | default('false') | bool | lower }}</enabled>
         <ip>{{ nso_config_webui_ssl.ip | default('0.0.0.0') }}</ip>
         <port>{{ nso_config_webui_ssl.port | default('8888') }}</port>
-        <key-file>{{ nso_config_webui_ssl.key_file | default('${NCS_DIR}/var/ncs/webui/cert/host.key') }}</key-file>
-        <cert-file>{{ nso_config_webui_ssl.cert_file | default('${NCS_DIR}/var/ncs/webui/cert/host.cert') }}</cert-file>
+        <key-file>{{ nso_config_webui_ssl.key_file | default('${NCS_DIR}/etc/ncs/ssl/cert/host.key') }}</key-file>
+        <cert-file>{{ nso_config_webui_ssl.cert_file | default('${NCS_DIR}/etc/ncs/ssl/cert/host.cert') }}</cert-file>
       </ssl>
 {% endif %}
     </transport>
@@ -372,13 +359,12 @@
   <!--   <enabled>true</enabled> -->
   <!-- </ha> -->
 
-  <large-scale>
-    <lsa>
-      <!-- Enable Layered Service Architecture, LSA. This requires
-           a separate Cisco Smart License.
-      -->
-      <enabled>false</enabled>
-    </lsa>
-  </large-scale>
+  <!-- Make sure that debug tools can be made visible. -->
+{% for group in nso_config_hide_group %}
+  <!-- Unhide {{ group.name }} -->
+  <hide-group>
+    <name>{{ group.name }}</name>
+  </hide-group>
+{% endfor %}
 
 </ncs-config>
