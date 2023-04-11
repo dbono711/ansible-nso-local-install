@@ -1,7 +1,11 @@
 ---
 skip_list:
-  - yaml
-  - role-name
+  - yaml[line-length]
+  - yaml[octal-values]
+  - name[casing]
+  # - fqcn[action-core]
+  # - deprecated-module
+
 
 warn_list:
   - no-changed-when

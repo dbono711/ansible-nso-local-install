@@ -3,12 +3,31 @@ nso_root_dir: "~/nso"
 nso_yang_files:
   - name: "ietf-routing-types.yang"
     uri: "https://raw.githubusercontent.com/YangModels/yang/master/standard/ietf/RFC/ietf-routing-types%402017-12-04.yang"
+nso_config_hide_group:
+  - name: debug
+nso_config_rollback:
+  enabled: true
+  directory: ./logs
+  history_size: 500
+nso_config_cli:
+  rollback_numbering: rolling
+nso_config_webui_ssl:
+  enabled: true
+  ip: 0.0.0.0
+  port: 8888
+  key_file: ${NCS_DIR}/etc/ncs/ssl/cert/host.key
+  cert_file: ${NCS_DIR}/etc/ncs/ssl/cert/host.cert
+nso_config_restconf:
+  enabled: true
 nso_netsim:
-  - type: iosxr
-    type_count: 3
-    type_count_gige: 2
-    type_count_tengige: 2
   - type: ios
-    type_count: 3
-    type_count_gige: 2
-    type_count_tengige: 2
+    count: 3
+    count_gige_intf: 2
+    count_tengige_intf: 2
+  - type: iosxr
+    count: 3
+    count_gige_intf: 2
+    count_tengige_intf: 2
+nso_customers:
+  - id: Disneyland
+  - id: Universal

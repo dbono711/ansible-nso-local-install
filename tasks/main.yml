@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-nso-local-install
 - name: main | Gather operating system variables
-  include_vars: "{{ item }}"
+  ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
     - "{{ ansible_distribution | lower }}.yml"
@@ -10,43 +10,43 @@
     - "always"
 
 - name: main | Pre-flight
-  include: "pre-flight.yml"
+  ansible.builtin.include_tasks: "pre-flight.yml"
   tags:
     - "always"
 
 - name: main | Install
-  include: "install.yml"
+  ansible.builtin.include_tasks: "install.yml"
   tags:
     - "always"
 
 - name: main | Runtime
-  include: "runtime.yml"
-  tags:
+  ansible.builtin.include_tasks: "runtime.yml"
+  tags:/build/building/multi-platform/
     - "always"
 
 - name: main | NED packages
-  include: "neds.yml"
+  ansible.builtin.include_tasks: "neds.yml"
   when: nso_ned_signed_binaries is defined and nso_ned_signed_binaries
   tags:
     - "nso_neds"
 
 - name: main | Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
   tags:
     - "always"
 
 - name: main | NETSIM devices
-  include: "netsim.yml"
+  ansible.builtin.include_tasks: "netsim.yml"
   when: nso_netsim is defined and nso_netsim
   tags:
     - "nso_netsim"
 
 - name: main | Configuration
-  include: "config.yml"
+  ansible.builtin.include_tasks: "config.yml"
   tags:
     - "nso_config"
 
 - name: main | Cleanup
-  include: "cleanup.yml"
+  ansible.builtin.include_tasks: "cleanup.yml"
   tags:
     - "always"

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+pypath="${NCS_DIR}/src/ncs/pyapi"
+
+# Make sure everyone finds the NCS Python libraries at startup
+if [ "x$PYTHONPATH" != "x" ]; then
+    PYTHONPATH=${pypath}:$PYTHONPATH
+else
+    PYTHONPATH=${pypath}
+fi
+export PYTHONPATH
+
+if [ "$1" = "-u" ]; then
+    main="${pypath}/ncs_pyvm/upgrade.py"
+else
+    main="${pypath}/ncs_pyvm/startup.py"
+fi
+
+if [ -x "$(which python3)" ]; then
+    echo "Starting python3 -u $main $*"
+    exec python3 -u "$main" "$@"
+fi
+echo "Starting python -u $main $*"
+exec python -u "$main" "$@"

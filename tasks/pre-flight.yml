@@ -1,30 +1,30 @@
 ---
 - name: pre-flight | Register Java binary
-  stat:
+  ansible.builtin.stat:
     path: "{{ java_binary }}"
   register: jb
 
 - name: pre-flight | Assert that Java binary is executable
-  assert:
+  ansible.builtin.assert:
     that:
       - jb.stat.executable
     fail_msg: "Whoops! Java binary is not executable"
     quiet: true
 
 - name: pre-flight | Search for Ant binary
-  stat:
+  ansible.builtin.stat:
     path: "{{ ant_binary }}"
   register: ab
 
 - name: pre-flight | Assert that Ant binary is executable
-  assert:
+  ansible.builtin.assert:
     that:
       - ab.stat.executable
     fail_msg: "Whoops! Ant binary is not executable"
     quiet: true
 
 - name: pre-flight | Search for local NSO signed binary in 'files'
-  find:
+  ansible.builtin.find:
     paths: "{{ role_path }}/files"
     patterns: "{{ nso_file_pattern }}"
     use_regex: true
@@ -32,11 +32,11 @@
   delegate_to: localhost
 
 - name: pre-flight | Assign variable for NSO signed binary
-  set_fact:
+  ansible.builtin.set_fact:
     nso_signed_binary: "{{ nso_files_dir.files[0].path | basename }}"
 
 - name: pre-flight | Search for local NED signed binaries in 'files'
-  find:
+  ansible.builtin.find:
     paths: "{{ role_path }}/files"
     patterns: "{{ ned_file_pattern }}"
     use_regex: true
@@ -44,6 +44,6 @@
   delegate_to: localhost
 
 - name: pre-flight | Assign variable for NED signed binaries
-  set_fact:
-    nso_ned_signed_binaries: "{{ nso_ned_signed_binaries | default([]) + [ item.path | basename ] }}"
+  ansible.builtin.set_fact:
+    nso_ned_signed_binaries: "{{ nso_ned_signed_binaries | default([]) + [item.path | basename] }}"
   loop: "{{ ned_files_dir.files }}"

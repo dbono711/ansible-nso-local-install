@@ -4,10 +4,11 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: debian-stretch
-    image: debian:stretch
+  # testing this on OS X M1/M2 chips is proving difficult due to container selecting the arm64 os/arch
   - name: debian-buster
     image: debian:buster
+  - name: debian-stretch
+    image: debian:stretch
     groups:
       - python3
 provisioner:
@@ -24,7 +25,6 @@ provisioner:
         ansible_python_interpreter: /usr/bin/python3
 lint: |
   set -e
-  yamllint .
   ansible-lint .
 verifier:
   name: ansible

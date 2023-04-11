@@ -1,6 +1,6 @@
 ---
 - name: config | NSO customer configuration
-  nso_config:
+  cisco.nso.nso_config:
     url: "http://{{ ansible_host }}:8080/jsonrpc"
     username: "admin"
     password: "admin"
