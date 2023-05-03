@@ -71,14 +71,6 @@ These variables are directly related to the parameters used to construct the NSO
 | `nso_config_webui_ssl` | {} | Corresponds to the `/ncs-config/webui/transport/ssl` section. |
 | `nso_config_restconf` | {} | Corresponds to the `/ncs-config/restconf` section. |
 
-### CDB Configuration ([nso-config.yml](defaults/main/nso-config.yml))
-
-These variables are directly related to configuration than can be applied to the NSO CDB
-
-| Name | Default | Description |
-| ---- | ------- | ----------- |
-| `nso_customers` | [] | Corresponds to the `/ncs:customers/ncs:customer` configuration. |
-
 ## Sample Playbook
 
 ```yaml
@@ -110,9 +102,6 @@ These variables are directly related to configuration than can be applied to the
       port: 8888
       key_file: ${NCS_DIR}/var/ncs/webui/cert/host.key
       cert_file: ${NCS_DIR}/var/ncs/webui/cert/host.cert
-    nso_customers:
-      - id: Disneyland
-      - id: Universal
   tasks:
     - name: Setup NSO
       include_role:

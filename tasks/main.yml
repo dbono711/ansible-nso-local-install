@@ -41,11 +41,6 @@
   tags:
     - "nso_netsim"
 
-- name: main | Configuration
-  ansible.builtin.include_tasks: "config.yml"
-  tags:
-    - "nso_config"
-
 - name: main | Cleanup
   ansible.builtin.include_tasks: "cleanup.yml"
   tags:

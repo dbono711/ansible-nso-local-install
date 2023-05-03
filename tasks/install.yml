@@ -24,6 +24,12 @@
     chdir: "{{ bin_working_dir }}"
     creates: "{{ nso_install_dir }}"
 
+- name: install | Python startup vm script
+  ansible.builtin.template:
+    src: "ncs-start-python-vm.j2"
+    dest: "{{ nso_install_dir }}/bin/ncs-start-python-vm"
+    mode: 0755
+
 - name: install | Install external YANG files
   ansible.builtin.include_tasks: "yang-files.yml"
   when: nso_yang_files is defined and nso_yang_files

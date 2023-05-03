@@ -16,9 +16,17 @@ else
     main="${pypath}/ncs_pyvm/startup.py"
 fi
 
+{% if ansible_os_family | lower == "darwin" %}
+if [ -x "$(which /usr/bin/python3)" ]; then
+    echo "Starting /usr/bin/python3 -u $main $*"
+    exec /usr/bin/python3 -u "$main" "$@"
+fi
+{% else %}
 if [ -x "$(which python3)" ]; then
     echo "Starting python3 -u $main $*"
     exec python3 -u "$main" "$@"
 fi
+{% endif %}
+
 echo "Starting python -u $main $*"
 exec python -u "$main" "$@"
