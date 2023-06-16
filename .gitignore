@@ -2,3 +2,4 @@
 *.log
 files/*
 !files/.gitkeep
+.DS_Store
