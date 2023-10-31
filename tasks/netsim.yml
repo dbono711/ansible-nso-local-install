@@ -2,7 +2,7 @@
 - name: netsim | Assert that defined NETSIM types are supported
   ansible.builtin.assert:
     that:
-      - item.type == 'iosxr' or item.type == 'ios'
+      - item.type == 'iosxr' or item.type == 'ios' or item.type == 'nxos'
     fail_msg: "Whoops! A NETSIM for '{{ item.type }}' is not supported"
     quiet: true
   loop: "{{ nso_netsim }}"
@@ -38,6 +38,13 @@
   ansible.builtin.set_fact:
     cisco_iosxr_ned_package: "{{ item.path }}"
   when: "item.path is regex('(iosxr)')"
+  loop: "{{ nso_ned_dir.files }}"
+  no_log: true
+
+- name: netsim | Set fact for NX-OS NED package
+  ansible.builtin.set_fact:
+    cisco_nxos_ned_package: "{{ item.path }}"
+  when: "item.path is regex('(nx)')"
   loop: "{{ nso_ned_dir.files }}"
   no_log: true
 

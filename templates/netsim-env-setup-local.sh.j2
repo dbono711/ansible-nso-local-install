@@ -37,6 +37,11 @@ cisco_ios_ned={{ cisco_ios_ned_package }}
 # Cisco IOS-XR NED
 cisco_iosxr_ned={{ cisco_iosxr_ned_package }}
 {% endif %}
+
+{% if cisco_nxos_ned_package is defined %}
+# Cisco NX-OS NED
+cisco_nxos_ned={{ cisco_nxos_ned_package }}
+{% endif %}
 # ---END CONTROL---
 
 # ---BEGIN SETUP---
@@ -90,6 +95,20 @@ for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
     done
     for ((b = 0; b < ${% raw %}{{% endraw %}{{ netsim.type }}_count_tengige}; b++)); do
         echo "devices device {{ netsim.type }}-$a config ios:interface TenGigabitEthernet 2/$b" >> netsim-env-config
+    done
+done
+{% endif %}
+{% if netsim.type == 'nxos' and cisco_nxos_ned_package %}
+# Cisco {{ netsim.type }} NETSIM's
+eval ncs-netsim --dir "${netsimdir}" "${stage}" "${cisco_nxos_ned}" "${% raw %}{{% endraw %}{{ netsim.type }}_count}" {{ netsim.type }}- > /dev/null
+for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
+    loopback_var=$(($loopback_var + 1))
+    echo "devices device-group {{ netsim.type }} device-name {{ netsim.type }}-$a" >> netsim-env-config
+    echo "devices device {{ netsim.type }}-$a config nx:interface Ethernet 1/64 ip address 127.0.0.1 255.255.255.0" >> netsim-env-config
+    echo "no devices device {{ netsim.type }}-$a config nx:interface loopback 0" >> netsim-env-config
+    echo "devices device {{ netsim.type }}-$a config nx:interface Loopback 0; ip address 192.168.1.$loopback_var 255.255.255.255" >> netsim-env-config
+    for ((b = 0; b < ${% raw %}{{% endraw %}{{ netsim.type }}_count_gige}; b++)); do
+        echo "devices device {{ netsim.type }}-$a config nx:interface Ethernet 2/$b" >> netsim-env-config
     done
 done
 {% endif %}
