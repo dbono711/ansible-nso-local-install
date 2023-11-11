@@ -2,8 +2,10 @@
 galaxy_info:
   author: Darren Bono
   description: Cisco Network Services Orchestrator (NSO) local installation
+  role_name: ansible_nso_local_install
+  namespace: dbono711
   license: MIT
-  min_ansible_version: 2.9
+  min_ansible_version: "2.9"
   platforms:
     - name: Debian
       versions:

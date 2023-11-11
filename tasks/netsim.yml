@@ -1,26 +1,26 @@
 ---
 - name: netsim | Assert that defined NETSIM types are supported
-  assert:
+  ansible.builtin.assert:
     that:
-      - item.type == 'iosxr' or item.type == 'ios'
+      - item.type == 'iosxr' or item.type == 'ios' or item.type == 'nxos'
     fail_msg: "Whoops! A NETSIM for '{{ item.type }}' is not supported"
     quiet: true
   loop: "{{ nso_netsim }}"
 
-- name: netsim | Register NED packages from NSO {{ nso_version }} runtime
-  find:
+- name: netsim | Register NED packages from NSO runtime
+  ansible.builtin.find:
     paths: "{{ nso_runtime_dir }}/packages"
     file_type: directory
   register: nso_ned_dir
 
 - name: netsim | Register NED NETSIM folders
-  stat:
+  ansible.builtin.stat:
     path: "{{ item.path }}/netsim"
   register: nso_ned_netsim_dir
   loop: "{{ nso_ned_dir.files }}"
 
 - name: netsim | Assert that NED NETSIM folders exist
-  assert:
+  ansible.builtin.assert:
     that:
       - item.stat.exists
     fail_msg: "Whoops! The NETSIM folder for NED {{ item.item.path | basename }} does not exist"
@@ -28,33 +28,40 @@
   loop: "{{ nso_ned_netsim_dir.results }}"
 
 - name: netsim | Set fact for IOS NED package
-  set_fact:
+  ansible.builtin.set_fact:
     cisco_ios_ned_package: "{{ item.path }}"
   when: "item.path is regex('(ios)(?!xr)')"
   loop: "{{ nso_ned_dir.files }}"
   no_log: true
 
 - name: netsim | Set fact for IOS-XR NED package
-  set_fact:
+  ansible.builtin.set_fact:
     cisco_iosxr_ned_package: "{{ item.path }}"
   when: "item.path is regex('(iosxr)')"
   loop: "{{ nso_ned_dir.files }}"
   no_log: true
 
+- name: netsim | Set fact for NX-OS NED package
+  ansible.builtin.set_fact:
+    cisco_nxos_ned_package: "{{ item.path }}"
+  when: "item.path is regex('(nx)')"
+  loop: "{{ nso_ned_dir.files }}"
+  no_log: true
+
 - name: netsim | Create NETSIM directory
-  file:
+  ansible.builtin.file:
     path: "{{ nso_netsim_dir }}"
     state: directory
-    mode: '0755'
+    mode: 0755
 
 - name: netsim | Create NETSIM setup script
-  template:
+  ansible.builtin.template:
     src: "netsim-env-setup-local.sh.j2"
     dest: "/tmp/netsim-env-setup-local.sh"
     mode: 0755
 
 - name: netsim | Execute NETSIM script
-  shell: "source {{ nso_install_dir }}/ncsrc && ./netsim-env-setup-local.sh"
+  ansible.builtin.shell: "source {{ nso_install_dir }}/ncsrc && ./netsim-env-setup-local.sh"
   args:
     chdir: /tmp
     executable: /bin/bash

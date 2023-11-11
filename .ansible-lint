@@ -1,7 +1,8 @@
 ---
 skip_list:
-  - yaml
-  - role-name
+  - yaml[line-length]
+  - yaml[octal-values]
+  - name[casing]
 
 warn_list:
   - no-changed-when
