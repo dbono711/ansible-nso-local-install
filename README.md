@@ -22,7 +22,7 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 * Ansible
   * Ansible >= 2.9.1 (might work with earlier versions, but not tested)
 * NSO
-  * Python 3
+  * Python >= 3.10
   * Operating System requirements as described on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/requirements) (Java + Ant)
     * **NOTE:** If ```Java``` or ```Ant``` binaries are installed in a location other than the default per the Operating System requirements on DevNet, you can change the respective ```java_binary``` or ```ant_binary``` variables in the appropriate Operating System [vars](vars) file
     * **NOTE:** Assumes the target host has ```build-essentials``` (gcc, make, etc.) and ```xsltproc``` installed

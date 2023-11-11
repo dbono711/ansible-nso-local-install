@@ -28,6 +28,9 @@ nso_netsim:
     count: 3
     count_gige_intf: 2
     count_tengige_intf: 2
+  - type: nxos
+    count: 4
+    count_gige_intf: 6
 nso_customers:
   - id: Disneyland
   - id: Universal

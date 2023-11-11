@@ -21,7 +21,7 @@
 
 - name: main | Runtime
   ansible.builtin.include_tasks: "runtime.yml"
-  tags:/build/building/multi-platform/
+  tags:
     - "always"
 
 - name: main | NED packages

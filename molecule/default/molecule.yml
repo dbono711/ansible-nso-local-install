@@ -1,16 +1,16 @@
 ---
 dependency:
   name: galaxy
+
 driver:
   name: docker
+
 platforms:
-  # testing this on OS X M1/M2 chips is proving difficult due to container selecting the arm64 os/arch
-  - name: debian-buster
-    image: debian:buster
-  - name: debian-stretch
-    image: debian:stretch
-    groups:
-      - python3
+  - name: python310
+    image: python:3.10-slim
+    platform: linux/amd64
+    pre_build_image: true
+
 provisioner:
   name: ansible
   config_options:
@@ -19,12 +19,10 @@ provisioner:
       callback_enabled: profile_tasks, timer, yaml
     ssh_connection:
       pipelining: false
-  inventory:
-    group_vars:
-      python3:
-        ansible_python_interpreter: /usr/bin/python3
+
 lint: |
   set -e
   ansible-lint .
+
 verifier:
   name: ansible

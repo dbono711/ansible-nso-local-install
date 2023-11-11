@@ -65,7 +65,7 @@ stage=create-network
 {% else %}
 stage=add-to-network
 {% endif %}
-{% if netsim.type == 'iosxr' and cisco_iosxr_ned_package %}
+{% if netsim.type == 'iosxr' and cisco_iosxr_ned_package is defined %}
 # Cisco {{ netsim.type }} NETSIM's
 eval ncs-netsim --dir "${netsimdir}" "${stage}" "${cisco_iosxr_ned}" "${% raw %}{{% endraw %}{{ netsim.type }}_count}" {{ netsim.type }}- > /dev/null
 for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
@@ -81,7 +81,7 @@ for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
     done
 done
 {% endif %}
-{% if netsim.type == 'ios' and cisco_ios_ned_package %}
+{% if netsim.type == 'ios' and cisco_ios_ned_package is defined %}
 # Cisco {{ netsim.type }} NETSIM's
 eval ncs-netsim --dir "${netsimdir}" "${stage}" "${cisco_ios_ned}" "${% raw %}{{% endraw %}{{ netsim.type }}_count}" {{ netsim.type }}- > /dev/null
 for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
@@ -98,7 +98,7 @@ for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do
     done
 done
 {% endif %}
-{% if netsim.type == 'nxos' and cisco_nxos_ned_package %}
+{% if netsim.type == 'nxos' and cisco_nxos_ned_package is defined %}
 # Cisco {{ netsim.type }} NETSIM's
 eval ncs-netsim --dir "${netsimdir}" "${stage}" "${cisco_nxos_ned}" "${% raw %}{{% endraw %}{{ netsim.type }}_count}" {{ netsim.type }}- > /dev/null
 for ((a = 0; a < ${% raw %}{{% endraw %}{{ netsim.type }}_count}; a++)); do

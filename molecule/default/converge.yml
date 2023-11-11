@@ -1,26 +1,24 @@
 ---
 - name: Converge
   hosts: all
-  
   tasks:
     - name: Install packages
-      become: true
       ansible.builtin.apt:
         name: "{{ item }}"
         state: present
         update_cache: true
         cache_valid_time: 3600
       loop:
+        - build-essential
+        - make
+        - xsltproc
         - default-jdk
         - ant
       when: "ansible_os_family == 'Debian'"
-    - name: Ensure correct python version is selected
-      community.general.alternatives:
-        name: python
-        link: /usr/bin/python
-        path: /usr/bin/python3
+
     - name: Include test variables
       ansible.builtin.include_vars: testvars.yml
+
     - name: Include ansible-nso-local-install
       ansible.builtin.include_role:
         name: ansible-nso-local-install

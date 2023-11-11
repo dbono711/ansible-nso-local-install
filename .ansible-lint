@@ -3,9 +3,6 @@ skip_list:
   - yaml[line-length]
   - yaml[octal-values]
   - name[casing]
-  # - fqcn[action-core]
-  # - deprecated-module
-
 
 warn_list:
   - no-changed-when
