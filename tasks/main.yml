@@ -17,12 +17,12 @@
 - name: main | Install
   ansible.builtin.include_tasks: "install.yml"
   tags:
-    - "always"
+    - "install"
 
 - name: main | Runtime
   ansible.builtin.include_tasks: "runtime.yml"
   tags:
-    - "always"
+    - "install"
 
 - name: main | NED packages
   ansible.builtin.include_tasks: "neds.yml"
