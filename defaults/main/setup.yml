@@ -1,6 +1,6 @@
 ---
 nso_root_dir: "~/nso"
-
+nso_venv_python: ""
 nso_yang_files: []
 # nso_yang_files:
 #   - name: "ietf-routing-types.yang"

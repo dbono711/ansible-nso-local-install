@@ -17,10 +17,17 @@ else
 fi
 
 {% if ansible_os_family | lower == "darwin" %}
+{% if nso_venv_python %}
+if [ -x "$(which {{ nso_venv_python }})" ]; then
+    echo "Starting {{ nso_venv_python }} -u $main $*"
+    exec {{ nso_venv_python }} -u "$main" "$@"
+fi
+{% else %}
 if [ -x "$(which /usr/bin/python3)" ]; then
     echo "Starting /usr/bin/python3 -u $main $*"
     exec /usr/bin/python3 -u "$main" "$@"
 fi
+{% endif %}
 {% else %}
 if [ -x "$(which python3)" ]; then
     echo "Starting python3 -u $main $*"
