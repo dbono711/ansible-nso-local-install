@@ -38,7 +38,7 @@
 
 - name: main | NETSIM devices
   ansible.builtin.include_tasks: "netsim.yml"
-  when: nso_netsim is defined and nso_netsim
+  when: (nso_netsim is defined and nso_netsim) and (nso_ned_signed_binaries is defined and nso_ned_signed_binaries)
   tags:
     - "nso_netsim"
 
