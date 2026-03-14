@@ -1,16 +1,15 @@
 # Ansible Role: NSO Local Installation
 
-Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.com/docs/nso/#!nso-fundamentals) (NSO) [Local](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/local-vs-system-installation) installation
+Ansible role for Cisco [Network Services Orchestrator](https://nso-docs.cisco.com/) (NSO) [Local](https://nso-docs.cisco.com/guides/nso-6.4/administration/installation-and-deployment/local-install) installation
 
 ## Overview
 
-* Execute NSO Local installation
-  * Include external YANG files
-* Create NSO runtime environment
-  * Customize the runtime configuration
+* Executes NSO 'Local' installation
+* Compiles external YANG files
+* Creates NSO runtime environment
+  * Customized runtime configuration
   * Automatically build and load NED's
-  * Create, customize, and load NSO NETSIM's
-  * Configure NSO CDB
+  * Create and load NSO NETSIM's
 
 ### Restrictions
 
@@ -20,28 +19,24 @@ Ansible role for Cisco [Network Services Orchestrator](https://developer.cisco.c
 ### Prerequisites
 
 * Ansible
-  * Ansible >= 2.9.1 (might work with earlier versions, but not tested)
+  * Ansible >= 2.9.1
 * NSO
   * Python >= 3.9.6
   * Operating System requirements as described on [DevNet](https://developer.cisco.com/docs/nso/#!getting-and-installing-nso/requirements) (Java + Ant)
-    * **NOTE:** If ```Java``` or ```Ant``` binaries are installed in a location other than the default per the Operating System requirements on DevNet, you can change the respective ```java_binary``` or ```ant_binary``` variables in the appropriate Operating System [vars](vars) file
+    * **NOTE:** If ```Java``` or ```Ant``` binaries are installed in a location other than the default per the Operating System requirements on DevNet, you can change the ```java_binary``` or ```ant_binary``` variables in the respective [vars](vars) file
     * **NOTE:** Assumes the target host has ```build-essentials``` (gcc, make, etc.) and ```xsltproc``` installed
   * NSO Signed Binary (*.signed.bin)
-    * A single NSO signed binary **must** be placed within the (```files```) folder
+    * A **single** NSO signed binary **must** be placed within the (```files```) folder
   * NED Signed Binaries (*.signed.bin)
-    * The NED signed binaries **must** be placed within the (```files```) folder
-
-### Latest NSO Version
-
-* 6.2
+    * Any NED signed binaries **must** be placed within the (```files```) folder
 
 ## Role Variables
 
-All variables which can be overridden are stored in various files within [defaults/main](defaults/main)
+All variables which can be overridden are found within [defaults/main](defaults/main)
 
 ### Setup ([setup.yml](defaults/main/setup.yml))
 
-These variables are directly related to running the _NSO Local installation_ and _NSO Runtime_ environment
+These variables are directly related to running the **NSO Local installation** and **NSO Runtime** environment
 
 | Name | Default | Description |
 | ---- | ------- | ----------- |

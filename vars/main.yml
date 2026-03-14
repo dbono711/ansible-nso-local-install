@@ -2,7 +2,7 @@
 # vars file for ansible-nso-local-install
 
 # [!DO NOT EDIT!]
-nso_version: "{{ nso_signed_binary | regex_search('nso-((\\d.)+\\d)', '\\1') | first }}"
+nso_version: "{{ nso_signed_binary | regex_search('nso-((\\d+\\.)+\\d+)', '\\1') | first }}"
 nso_install_binary: "{{ nso_signed_binary | replace('.signed.bin', '.installer.bin') | replace('-freetrial', '') }}"
 nso_install_dir: "{{ nso_root_dir }}/{{ nso_version }}"
 nso_runtime_dir: "{{ nso_root_dir }}/{{ nso_version }}-run"
