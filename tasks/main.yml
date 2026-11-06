@@ -1,48 +1,99 @@
 ---
 # tasks file for ansible-nso-local-install
+# - name: main | Gather operating system variables
+#   ansible.builtin.include_vars: "{{ item }}"
+#   with_first_found:
+#     - "{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+#     - "{{ ansible_facts['distribution'] | lower }}.yml"
+#     - "{{ ansible_facts['os_family'] | lower }}.yml"
+#   tags:
+#     - "always"
+#
+# - name: main | Pre-flight
+#   ansible.builtin.include_tasks: "pre-flight.yml"
+#   tags:
+#     - "always"
+#
+# - name: main | Install
+#   ansible.builtin.include_tasks: "install.yml"
+#   tags:
+#     - "install"
+#     - "runtime"
+#
+# - name: main | Runtime
+#   ansible.builtin.include_tasks: "runtime.yml"
+#   tags:
+#     - "runtime"
+#
+# - name: main | NED packages
+#   ansible.builtin.include_tasks:
+#     file: "neds.yml"
+#     apply:
+#       tags:
+#         - "nso_neds"
+#   when: nso_ned_packages | default([]) | length > 0
+#   tags:
+#     - "nso_neds"
+#
+# - name: main | Flush handlers
+#   ansible.builtin.meta: flush_handlers
+#   tags:
+#     - "always"
+#
+# - name: main | NETSIM devices
+#   ansible.builtin.include_tasks:
+#     file: "netsim.yml"
+#     apply:
+#       tags:
+#         - "nso_netsim"
+#   when:
+#     - nso_netsim | default([]) | length > 0
+#     - nso_ned_packages | default([]) | length > 0
+#   tags:
+#     - "nso_netsim"
+#
+# - name: main | Cleanup
+#   ansible.builtin.include_tasks: "cleanup.yml"
+#   tags:
+#     - "always"
+
+
 - name: main | Gather operating system variables
   ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
-    - "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}.yml"
-    - "{{ ansible_distribution | lower }}.yml"
-    - "{{ ansible_os_family | lower }}.yml"
-  tags:
-    - "always"
+    - "{{ ansible_facts['distribution'] | lower }}-{{ ansible_facts['distribution_major_version'] }}.yml"
+    - "{{ ansible_facts['distribution'] | lower }}.yml"
+    - "{{ ansible_facts['os_family'] | lower }}.yml"
+  tags: [always]
 
 - name: main | Pre-flight
-  ansible.builtin.include_tasks: "pre-flight.yml"
-  tags:
-    - "always"
+  ansible.builtin.import_tasks: pre-flight.yml
+  tags: [always]
 
 - name: main | Install
-  ansible.builtin.include_tasks: "install.yml"
-  tags:
-    - "install"
-    - "runtime"
+  ansible.builtin.import_tasks: install.yml
+  tags: [install, runtime]
 
 - name: main | Runtime
-  ansible.builtin.include_tasks: "runtime.yml"
-  tags:
-    - "runtime"
+  ansible.builtin.import_tasks: runtime.yml
+  tags: [runtime]
 
 - name: main | NED packages
-  ansible.builtin.include_tasks: "neds.yml"
-  when: nso_ned_signed_binaries is defined and nso_ned_signed_binaries
-  tags:
-    - "nso_neds"
+  ansible.builtin.import_tasks: neds.yml
+  when: nso_ned_packages | default([]) | length > 0
+  tags: [nso_neds]
 
 - name: main | Flush handlers
   ansible.builtin.meta: flush_handlers
-  tags:
-    - "always"
+  tags: [always]
 
 - name: main | NETSIM devices
-  ansible.builtin.include_tasks: "netsim.yml"
-  when: (nso_netsim is defined and nso_netsim) and (nso_ned_signed_binaries is defined and nso_ned_signed_binaries)
-  tags:
-    - "nso_netsim"
+  ansible.builtin.import_tasks: netsim.yml
+  when:
+    - nso_netsim | default([]) | length > 0
+    - nso_ned_packages | default([]) | length > 0
+  tags: [nso_netsim]
 
 - name: main | Cleanup
-  ansible.builtin.include_tasks: "cleanup.yml"
-  tags:
-    - "always"
+  ansible.builtin.import_tasks: cleanup.yml
+  tags: [always]

@@ -32,4 +32,4 @@
 
 - name: install | Install external YANG files
   ansible.builtin.include_tasks: "yang-files.yml"
-  when: nso_yang_files is defined and nso_yang_files
+  when: nso_yang_files | default([]) | length > 0

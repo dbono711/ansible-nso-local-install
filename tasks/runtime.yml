@@ -5,6 +5,12 @@
     executable: /bin/bash
     creates: "{{ nso_runtime_dir }}"
 
+- name: runtime | Ensure NSO state directory exists
+  ansible.builtin.file:
+    path: "{{ nso_runtime_dir }}/state"
+    state: directory
+    mode: "0755"
+
 - name: runtime | Correct permissions for NSO SSH key
   ansible.builtin.file:
     path: "{{ nso_install_dir }}/etc/ncs/ssh/ssh_host_ed25519_key"
@@ -15,8 +21,8 @@
   args:
     executable: /bin/bash
   register: ncs_status
-  ignore_errors: true
-  no_log: true
+  failed_when: false
+  changed_when: false
 
 - name: runtime | Start NSO
   ansible.builtin.shell: "cd {{ nso_runtime_dir }} && source {{ nso_install_dir }}/ncsrc && ncs --with-package-reload"

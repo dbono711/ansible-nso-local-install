@@ -1,33 +1,39 @@
 ---
-- name: neds | Copy NED signed binaries to remote host
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "{{ bin_working_dir }}"
-    mode: '0755'
-  loop: "{{ nso_ned_signed_binaries }}"
-  when: ansible_host != "localhost"
+# - name: neds | Copy NED signed binaries to remote host
+#   ansible.builtin.copy:
+#     src: "{{ item }}"
+#     dest: "{{ bin_working_dir }}"
+#     mode: '0755'
+#   loop: "{{ nso_ned_signed_binaries }}"
+#   when: ansible_host != "localhost"
+#
+# - name: neds | Unpack NED signed binaries
+#   ansible.builtin.command: "sh {{ item }} --skip-verification"
+#   args:
+#     chdir: "{{ bin_working_dir }}"
+#     creates: "{{ item | replace('.signed.bin', '') | replace('-freetrial', '') }}.tar.gz"
+#   loop: "{{ nso_ned_signed_binaries }}"
 
-- name: neds | Unpack NED signed binaries
-  ansible.builtin.command: "sh {{ item }} --skip-verification"
-  args:
-    chdir: "{{ bin_working_dir }}"
-    creates: "{{ item | replace('.signed.bin', '') | replace('-freetrial', '') }}.tar.gz"
-  loop: "{{ nso_ned_signed_binaries }}"
+# - name: neds | Unarchive NED packages into NSO runtime
+#   ansible.builtin.unarchive:
+#     src: "{{ bin_working_dir }}/{{ item | replace('.signed.bin', '') | replace('-freetrial', '') }}.tar.gz"
+#     dest: "{{ nso_runtime_dir }}/packages"
+#   loop: "{{ nso_ned_signed_binaries }}"
+#   when: ansible_host == "localhost"
+#
+# - name: neds | Unarchive NED packages into NSO runtime on remote host
+#   ansible.builtin.unarchive:
+#     src: "{{ bin_working_dir }}/{{ item | replace('.signed.bin', '') | replace('-freetrial', '') }}.tar.gz"
+#     dest: "{{ nso_runtime_dir }}/packages"
+#     remote_src: true
+#   loop: "{{ nso_ned_signed_binaries }}"
+#   when: ansible_host != "localhost"
 
 - name: neds | Unarchive NED packages into NSO runtime
   ansible.builtin.unarchive:
-    src: "{{ bin_working_dir }}/{{ item | replace('.signed.bin', '') | replace('-freetrial', '') }}.tar.gz"
+    src: "{{ item }}"
     dest: "{{ nso_runtime_dir }}/packages"
-  loop: "{{ nso_ned_signed_binaries }}"
-  when: ansible_host == "localhost"
-
-- name: neds | Unarchive NED packages into NSO runtime on remote host
-  ansible.builtin.unarchive:
-    src: "{{ bin_working_dir }}/{{ item | replace('.signed.bin', '') | replace('-freetrial', '') }}.tar.gz"
-    dest: "{{ nso_runtime_dir }}/packages"
-    remote_src: true
-  loop: "{{ nso_ned_signed_binaries }}"
-  when: ansible_host != "localhost"
+  loop: "{{ nso_ned_packages }}"
 
 - name: neds | Register NED packages from NSO runtime
   ansible.builtin.find:
@@ -35,9 +41,24 @@
     file_type: directory
   register: nso_ned_dir
 
+# - ansible.builtin.debug:
+#     var: nso_ned_dir
+#   tags: [always]
+
+# - name: neds | Compile NED packages
+#   ansible.builtin.shell: "source {{ nso_install_dir }}/ncsrc && make clean all --directory {{ item.path }}/src"
+#   args:
+#     executable: /bin/bash
+#   loop: "{{ nso_ned_dir.files }}"
+#   notify: "Reload nso packages"
+
 - name: neds | Compile NED packages
   ansible.builtin.shell: "source {{ nso_install_dir }}/ncsrc && make clean all --directory {{ item.path }}/src"
   args:
     executable: /bin/bash
+    removes: "{{ item.path }}/src/Makefile"
+  environment:
+    PATH: "{{ nso_venv_python | dirname }}:{{ ansible_facts['env']['PATH'] }}"
+    VIRTUAL_ENV: "{{ nso_venv_python | dirname | dirname }}"
   loop: "{{ nso_ned_dir.files }}"
   notify: "Reload nso packages"

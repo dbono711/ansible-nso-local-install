@@ -16,7 +16,7 @@ else
     main="${pypath}/ncs_pyvm/startup.py"
 fi
 
-{% if ansible_os_family | lower == "darwin" %}
+{% if ansible_facts['os_family'] | lower == "darwin" %}
 {% if nso_venv_python %}
 if [ -x "$(which {{ nso_venv_python }})" ]; then
     echo "Starting {{ nso_venv_python }} -u $main $*"

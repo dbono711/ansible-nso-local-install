@@ -35,7 +35,7 @@
   ansible.builtin.set_fact:
     nso_signed_binary: "{{ nso_files_dir.files[0].path | basename }}"
 
-- name: pre-flight | Search for local NED signed binaries in 'files'
+- name: pre-flight | Search for local NED packages in 'files'
   ansible.builtin.find:
     paths: "{{ role_path }}/files"
     patterns: "{{ ned_file_pattern }}"
@@ -43,7 +43,19 @@
   register: ned_files_dir
   delegate_to: localhost
 
-- name: pre-flight | Assign variable for NED signed binaries
+- name: pre-flight | Assign variable for NED packages
   ansible.builtin.set_fact:
-    nso_ned_signed_binaries: "{{ nso_ned_signed_binaries | default([]) + [item.path | basename] }}"
-  loop: "{{ ned_files_dir.files }}"
+    nso_ned_packages: "{{ ned_files_dir.files | map(attribute='path') | list }}"
+
+# - name: pre-flight | Search for local NED signed binaries in 'files'
+#   ansible.builtin.find:
+#     paths: "{{ role_path }}/files"
+#     patterns: "{{ ned_file_pattern }}"
+#     use_regex: true
+#   register: ned_files_dir
+#   delegate_to: localhost
+#
+# - name: pre-flight | Assign variable for NED signed binaries
+#   ansible.builtin.set_fact:
+#     nso_ned_signed_binaries: "{{ nso_ned_signed_binaries | default([]) + [item.path | basename] }}"
+#   loop: "{{ ned_files_dir.files }}"

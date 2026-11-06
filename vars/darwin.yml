@@ -1,5 +1,6 @@
 ---
 nso_file_pattern: "(nso-\\b).*(darwin\\b).*(.signed.bin\\b)"
-ned_file_pattern: "(ncs-\\b).*(.signed.bin\\b)"
+# ned_file_pattern: "(ncs-\\b).*(.signed.bin\\b)"
+ned_file_pattern: '^ncs-.*\.tar\.gz$'
 java_binary: "/usr/bin/java"
 ant_binary: "/opt/homebrew/bin/ant"
